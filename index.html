@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Refused at the border — every FDA import refusal since 2002</title>
+<meta name="description" content="525,457 shipments the Food and Drug Administration turned away at the United States border since 2002, searchable by country, firm, product and the statutory charge — including filthy, putrid, or decomposed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="house.css">
+<style>
+:root{--ink3:#9a7b2e}
+.chg{padding:13px 26px;border-bottom:1px solid var(--hair);cursor:pointer}
+.chg:hover{background:var(--paper2)}
+.chg .top{display:flex;justify-content:space-between;gap:14px;align-items:baseline}
+.chg .nm{font-family:var(--display);font-weight:700;font-size:1.02rem;letter-spacing:.04em;text-transform:uppercase}
+.chg .ct{font-family:var(--display);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chg .sec{font-size:var(--t-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);
+  font-weight:700;margin-top:3px}
+.chg .txt{font-size:.94rem;line-height:1.5;margin-top:7px;color:#39403a}
+.chg .txt.clip{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.spark{display:flex;align-items:flex-end;gap:1px;height:26px;margin-top:8px}
+.spark i{flex:1;background:var(--ink2c);opacity:.75;min-height:1px}
+.flag{display:inline-block;padding:1px 7px;background:var(--ink1);color:var(--paper);
+  font-size:var(--t-micro);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-left:8px}
+.ref{padding:11px 26px;border-bottom:1px solid var(--hair)}
+.ref b{font-family:var(--display);font-weight:600;font-size:1rem;display:block;line-height:1.25}
+.ref .meta{font-size:var(--t-micro);letter-spacing:.09em;text-transform:uppercase;font-weight:700;
+  color:var(--ink2);margin-top:3px}
+.ref .codes{margin-top:6px;display:flex;flex-wrap:wrap;gap:5px}
+.ref .codes span{font-size:var(--t-micro);font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid var(--hair);padding:1px 6px;color:var(--ink2)}
+.ref .codes span.k{border-color:var(--ink1);color:var(--ink1)}
+.pane{display:none}.pane.on{display:block}
+.loading{padding:34px 26px;color:var(--ink2)}
+.ctry{display:flex;align-items:center;gap:11px;padding:7px 26px;border-bottom:1px solid var(--hair2)}
+.ctry span:first-child{width:170px;font-weight:600;font-size:.95rem;flex:none}
+.ctry i{height:13px;display:block;background:var(--ink2c);mix-blend-mode:multiply;opacity:.85}
+.ctry u{text-decoration:none;font-family:var(--display);font-weight:600;margin-left:auto;
+  font-variant-numeric:tabular-nums;font-size:.92rem}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="strip">
+    <span>U.S. Food and Drug Administration &middot; Office of Inspections and Investigations</span>
+    <span id="range">Import refusals</span>
+  </div>
+
+  <div class="head">
+    <!-- mark: a stack of import crates, one struck out and turned back -->
+    <div class="hmark" aria-hidden="true">
+      <img src="img/mark.png" alt="Abstract screenprint of stacked shipping crates, two of them struck through" width="640" height="357">
+    </div>
+    <h1>Refused at the border</h1>
+    <p class="sub">Every shipment the Food and Drug Administration turned away from the United States
+      since 2002, with the statutory charge that stopped it. The single most common food charge is
+      number 249, which reads in part: the article "appears to consist in whole or in part of a filthy,
+      putrid, or decomposed substance." It has been used <b id="filthy">&mdash;</b> times.</p>
+    <p class="src">Source: <a href="https://datadashboard.fda.gov/oii/cd/imprefusals.htm" target="_blank" rel="noopener">FDA Data Dashboard import refusals API</a>
+      &middot; charge text from FDA's own crosswalk &middot; <a href="methodology.html">method</a></p>
+  </div>
+
+  <div class="capline" id="capline"></div>
+  <div class="counts" id="counts"></div>
+
+  <div class="tabs" id="tabs">
+    <button class="on" data-p="charges">The charges</button>
+    <button data-p="countries">Countries</button>
+    <button data-p="firms">Firms</button>
+    <button data-p="recent">Recent refusals</button>
+  </div>
+
+  <!-- ============ charges ============ -->
+  <div class="pane on" id="p-charges">
+    <div class="controls">
+      <input id="q-chg" type="search" placeholder="Search charges — try filthy, salmonella, rodent, unapproved, lead…" autocomplete="off">
+      <select id="sort-chg">
+        <option value="n">Most used</option>
+        <option value="az">Code A–Z</option>
+        <option value="rise">Rising since 2020</option>
+      </select>
+    </div>
+    <div class="colhead"><span>Statutory charges, as FDA writes them</span><span id="c-chg"></span></div>
+    <div id="list-chg"></div>
+  </div>
+
+  <!-- ============ countries ============ -->
+  <div class="pane" id="p-countries">
+    <div class="controls"><input id="q-ctry" type="search" placeholder="Search countries…" autocomplete="off"></div>
+    <div class="colhead"><span>Refusals by country of origin, 2002&ndash;2026</span><span id="c-ctry"></span></div>
+    <div id="list-ctry"></div>
+  </div>
+
+  <!-- ============ firms ============ -->
+  <div class="pane" id="p-firms">
+    <div class="controls"><input id="q-firm" type="search" placeholder="Search firms…" autocomplete="off"></div>
+    <div class="colhead"><span>The 400 most-refused firms</span><span id="c-firm"></span></div>
+    <div class="pad"><table class="h" id="tbl-firm"></table></div>
+  </div>
+
+  <!-- ============ recent ============ -->
+  <div class="pane" id="p-recent">
+    <div class="controls">
+      <input id="q-rec" type="search" placeholder="Search firm, product, country, city…" autocomplete="off">
+      <select id="f-cat"><option value="">All categories</option></select>
+      <select id="f-chg"><option value="">All charges</option></select>
+    </div>
+    <div class="colhead"><span id="rec-scope">Recent refusals</span><span id="c-rec"></span></div>
+    <div id="list-rec"><div class="loading">Loading the recent refusal file&hellip;</div></div>
+  </div>
+
+  <div class="foot">
+    <p class="caution">Built with AI assistance from FDA's own API and charge-code crosswalk.
+      Charge text is quoted verbatim from FDA. A refusal is an FDA decision about a shipment's
+      appearance of violation, not a court finding.</p>
+    <p><a href="methodology.html">How this was built, and what it leaves out &rarr;</a></p>
+  </div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>(s==null?'':String(s)).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nf=n=>Number(n).toLocaleString('en-US');
+let META,AGG,CHARGES,FIRMS,RECENT=null,CHMAP={};
+
+Promise.all([
+  fetch('data/meta.json',{cache:'no-cache'}).then(r=>r.json()),
+  fetch('data/agg.json',{cache:'no-cache'}).then(r=>r.json()),
+  fetch('data/charges.json',{cache:'no-cache'}).then(r=>r.json()),
+  fetch('data/firms.json',{cache:'no-cache'}).then(r=>r.json()),
+]).then(([m,a,c,f])=>{META=m;AGG=a;CHARGES=c;FIRMS=f;c.forEach(x=>CHMAP[x.id]=x);init();})
+ .catch(e=>{$('#list-chg').innerHTML='<div class="empty">Could not load data. '+esc(e.message)+'</div>';});
+
+function init(){
+  const filthy = CHARGES.find(c=>c.code==='FILTHY');
+  $('#filthy').textContent = filthy?nf(filthy.n):'—';
+  $('#range').textContent = META.date_min.replace('-','/')+' – '+META.date_max.replace('-','/');
+  $('#capline').innerHTML='Shipments refused at the United States border between <b>'+META.date_min.replace('-','/')+'</b> and <b>'+META.date_max.replace('-','/')+'</b> &middot; one row is one refused entry line, not one container';
+  $('#counts').innerHTML=[
+    [nf(META.records),'Refusals'],
+    [nf(META.countries),'Countries'],
+    [nf(META.charge_codes_used),'Charges used'],
+    [META.years.length,'Years'],
+    [filthy?nf(filthy.n):'—','Filthy'],
+  ].map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join('');
+
+  document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));
+    document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.p));
+    if(b.dataset.p==='recent' && !RECENT) loadRecent();
+  }));
+
+  $('#q-chg').addEventListener('input',renderCharges);
+  $('#sort-chg').addEventListener('change',renderCharges);
+  $('#q-ctry').addEventListener('input',renderCountries);
+  $('#q-firm').addEventListener('input',renderFirms);
+  renderCharges(); renderCountries(); renderFirms();
+}
+
+/* ---------- charges ---------- */
+function renderCharges(){
+  const q=$('#q-chg').value.toLowerCase().trim(), s=$('#sort-chg').value;
+  let rows=CHARGES.filter(c=>!q || (c.code||'').toLowerCase().includes(q)
+    || (c.text||'').toLowerCase().includes(q) || (c.section||'').toLowerCase().includes(q) || c.id===q);
+  if(s==='az') rows=[...rows].sort((a,b)=>(a.code||'zz').localeCompare(b.code||'zz'));
+  else if(s==='rise') rows=[...rows].sort((a,b)=>rise(b)-rise(a));
+  $('#c-chg').textContent=rows.length+' of '+CHARGES.length;
+  const yrs=META.years;
+  $('#list-chg').innerHTML = rows.length? rows.map(c=>{
+    const max=Math.max(...yrs.map(y=>c.yr[y]||0))||1;
+    const spark=yrs.map(y=>`<i style="height:${Math.round((c.yr[y]||0)/max*100)}%" title="${y}: ${nf(c.yr[y]||0)}"></i>`).join('');
+    return `<div class="chg">
+      <div class="top"><span class="nm">${esc(c.code||('Code '+c.id))}${c.text?'':'<span class="flag">No published text</span>'}</span>
+        <span class="ct">${nf(c.n)}</span></div>
+      <div class="sec">${esc(c.section||'Section not published')} &middot; code ${esc(c.id)}</div>
+      ${c.text?`<div class="txt clip" onclick="this.classList.toggle('clip')">${esc(c.text)}</div>`:''}
+      <div class="spark">${spark}</div></div>`;
+  }).join('') : '<div class="empty">No charge matches that.</div>';
+}
+function rise(c){
+  const a=['2016','2017','2018','2019'].reduce((s,y)=>s+(c.yr[y]||0),0);
+  const b=['2022','2023','2024','2025'].reduce((s,y)=>s+(c.yr[y]||0),0);
+  return b-a;
+}
+
+/* ---------- countries ---------- */
+function renderCountries(){
+  const q=$('#q-ctry').value.toLowerCase().trim();
+  const rows=AGG.country.filter(([c])=>!q||c.toLowerCase().includes(q));
+  const max=AGG.country.length?AGG.country[0][1]:1;
+  $('#c-ctry').textContent=rows.length+' countries';
+  $('#list-ctry').innerHTML=rows.length?rows.map(([c,n])=>
+    `<div class="ctry"><span>${esc(c)}</span><i style="width:${(n/max*100).toFixed(1)}%"></i><u>${nf(n)}</u></div>`
+  ).join(''):'<div class="empty">No country matches that.</div>';
+}
+
+/* ---------- firms ---------- */
+function renderFirms(){
+  const q=$('#q-firm').value.toLowerCase().trim();
+  const rows=FIRMS.filter(f=>!q||f.f.toLowerCase().includes(q)||f.c.toLowerCase().includes(q));
+  $('#c-firm').textContent=rows.length+' firms';
+  $('#tbl-firm').innerHTML='<tr><th>Firm</th><th>City</th><th>Country</th><th class="n">Refusals</th></tr>'+
+    rows.map(f=>`<tr><td>${esc(f.f)}</td><td>${esc(f.ci)}</td><td>${esc(f.c)}</td><td class="n">${nf(f.n)}</td></tr>`).join('');
+}
+
+/* ---------- recent ---------- */
+function loadRecent(){
+  fetch('data/recent.json',{cache:'no-cache'}).then(r=>r.json()).then(d=>{
+    RECENT=d;
+    const cats=[...new Set(d.map(r=>r.cat).filter(Boolean))].sort();
+    $('#f-cat').innerHTML+=cats.map(c=>`<option>${esc(c)}</option>`).join('');
+    const used=[...new Set(d.flatMap(r=>r.ch))].map(id=>CHMAP[id]).filter(Boolean)
+      .sort((a,b)=>b.n-a.n).slice(0,60);
+    $('#f-chg').innerHTML+=used.map(c=>`<option value="${c.id}">${esc(c.code||c.id)}</option>`).join('');
+    $('#rec-scope').textContent='Refusals since '+META.recent_from;
+    ['#q-rec','#f-cat','#f-chg'].forEach(s=>$(s).addEventListener('input',renderRecent));
+    $('#f-cat').addEventListener('change',renderRecent);
+    $('#f-chg').addEventListener('change',renderRecent);
+    renderRecent();
+  }).catch(e=>{$('#list-rec').innerHTML='<div class="empty">Could not load recent refusals.</div>';});
+}
+function renderRecent(){
+  const q=$('#q-rec').value.toLowerCase().trim(), cat=$('#f-cat').value, ch=$('#f-chg').value;
+  let rows=RECENT.filter(r=>{
+    if(cat && r.cat!==cat) return false;
+    if(ch && !r.ch.includes(ch)) return false;
+    if(q && !((r.f+' '+r.p+' '+r.c+' '+r.ci+' '+r.i).toLowerCase().includes(q))) return false;
+    return true;
+  });
+  $('#c-rec').textContent=nf(rows.length)+' shipments';
+  const show=rows.slice(0,400);
+  $('#list-rec').innerHTML = (rows.length?show.map(r=>`<div class="ref">
+      <b>${esc(r.p||'Unnamed product')}</b>
+      <div class="meta">${esc(r.f)} &middot; ${esc([r.ci,r.c].filter(Boolean).join(', '))} &middot; refused ${esc(r.d)}</div>
+      <div class="codes">${r.ch.map(id=>{const c=CHMAP[id];
+        return `<span class="${c&&c.code==='FILTHY'?'k':''}" title="${esc(c&&c.text||'No published text')}">${esc(c&&c.code||id)}</span>`;}).join('')}</div>
+    </div>`).join(''):'<div class="empty">No shipment matches that.</div>')
+    + (rows.length>show.length?`<div class="empty">Showing the first ${nf(show.length)} of ${nf(rows.length)}. Narrow the search to see more.</div>`:'');
+}
+</script>
+</body>
+</html>

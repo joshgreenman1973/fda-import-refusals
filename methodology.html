@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How this was built — Refused at the border</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="house.css">
+<style>
+:root{--ink3:#9a7b2e}
+.doc{max-width:780px;padding:0 26px 70px}
+.doc h2{font-family:var(--display);font-size:1.1rem;font-weight:700;letter-spacing:-.01em;
+  margin:30px 0 9px;padding-bottom:6px;border-bottom:1px solid var(--hair)}
+.doc p{margin:0 0 13px;line-height:1.62}
+.doc ul{margin:0 0 13px;padding-left:20px}.doc li{margin-bottom:7px;line-height:1.55}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--paper2);padding:1px 5px}
+.back{font-size:var(--t-small);letter-spacing:.13em;text-transform:uppercase;font-weight:700;
+  color:var(--ink2);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="strip"><a class="back" href="index.html">&larr; Back to the database</a><span>Method</span></div>
+  <div class="head">
+    <h1>How this was built</h1>
+    <p class="sub">Sources, the exact query, what counts as a refusal and the four things this
+      database cannot tell you.</p>
+  </div>
+  <div class="doc">
+
+    <h2>Where the data comes from</h2>
+    <p>Two FDA sources, both public:</p>
+    <ul>
+      <li>The refusals themselves come from the FDA Data Dashboard API endpoint
+        <code>https://api-datadashboard.fda.gov/v1/import_refusals</code>. It requires a free
+        authorization key, obtained through FDA's Office of Inspections and Investigations Unified
+        Logon. The key is not stored in this repository.</li>
+      <li>The charge text comes from FDA's own crosswalk,
+        <a href="https://datadashboard.fda.gov/oii/download/ACT_SECTION_CHARGES.CSV" target="_blank" rel="noopener">ACT_SECTION_CHARGES.CSV</a>,
+        which maps each numeric charge ID to a short code, the statutory sections and the full
+        charge statement. A copy as downloaded is in <code>data/charge-codes-source.csv</code>.</li>
+    </ul>
+    <p>Every word of charge language on this site is quoted verbatim from that file. Nothing was
+      paraphrased or shortened, and the charges are not editorial characterizations &mdash; they are
+      what FDA writes on the Notice of FDA Action.</p>
+
+    <h2>The query</h2>
+    <p>The endpoint caps a response at 5,000 rows, so the fetcher walks the record month by month from
+      January 2002 to the present, paging within each month until a short page comes back, and
+      de-duplicating on <code>ShipmentID</code>. That produced <strong>525,457 refusals</strong> dated
+      January 1, 2002 through August 2026. The script stops only after eighteen consecutive empty
+      months and exits non-zero if it fetches nothing at all, so a silent failure cannot be published
+      as an empty database.</p>
+
+    <h2>What a refusal is, and is not</h2>
+    <p>A refusal is FDA's final decision that a detained shipment appears to violate the Food, Drug,
+      and Cosmetic Act. The shipment must be exported or destroyed under Customs supervision within 90
+      days. It is an administrative finding about the <em>appearance</em> of a violation. It is not a
+      court judgment, not a finding of fact about the firm, and not proof that anyone was harmed. Firms
+      may contest refusals, and a refusal can follow a paperwork failure as easily as a filthy one.</p>
+    <p>One shipment can carry several charges, so charge counts sum to more than the number of
+      shipments. The unit of a charge count is charge-on-a-shipment, not shipment.</p>
+
+    <h2>Counting rule for shipments</h2>
+    <p>Each row returned by FDA is one line on a refused entry, identified by a <code>ShipmentID</code>
+      like <code>1FX-5639990-0/20002/1</code>. A single physical container can therefore appear as
+      several rows when it holds several refused product lines. This site counts rows, which is how
+      FDA's own dashboard counts them. Read "525,457 shipments refused" as "525,457 refused entry
+      lines."</p>
+
+    <h2>Charge codes without published text</h2>
+    <p>279 distinct charge codes appear in the refusal record. 22 of them are not present in FDA's
+      published crosswalk, and those are shown here as bare code numbers labelled
+      "no published text" rather than guessed at. They are a small share of all charge hits. If FDA
+      updates the crosswalk, re-running the build will fill them in.</p>
+
+    <h2>Why only recent refusals are searchable line by line</h2>
+    <p>The full 525,457-record history is used for every count, chart and ranking on the site. Shipping
+      all of it as a browsable file would mean a download in the tens of megabytes, so the line-by-line
+      browser covers refusals since September 2025 &mdash; 39,386 of them. Country, firm, charge and
+      year figures are computed across the entire quarter-century, not the recent slice.</p>
+
+    <h2>What this cannot tell you</h2>
+    <ul>
+      <li><strong>What share of imports get refused.</strong> There is no denominator here. A country
+        with many refusals may simply ship enormous volume. Do not read the country ranking as a
+        quality ranking.</li>
+      <li><strong>What happened next.</strong> Refusals can be appealed, and reconditioning can be
+        approved. Outcomes are not in this data.</li>
+      <li><strong>Anything about products that were never sampled.</strong> FDA examines a fraction of
+        entries, targeted by risk. Refusals reflect where FDA looked as much as where problems are.</li>
+      <li><strong>Firm identity over time.</strong> Firms are matched on the name and country as filed.
+        Spelling variants of the same company will appear as separate firms.</li>
+    </ul>
+
+    <h2>Rebuilding it</h2>
+    <p>Two scripts in this repository: <code>fetch_fda.py</code> pages the API month by month and writes
+      one JSON object per line; <code>build_fda.py</code> joins the charge crosswalk, aggregates and
+      writes the files in <code>data/</code>. Set <code>FDA_USER</code> and <code>FDA_KEY</code> in the
+      environment. FDA updates the underlying report monthly.</p>
+
+    <p class="caution" style="margin-top:26px">Built with AI assistance. The fetching, aggregation and
+      this page were produced with Claude. Figures are computed from FDA's API rather than transcribed,
+      but check FDA's dashboard before publishing any number from here.</p>
+    <p><a class="back" href="index.html">&larr; Back to the database</a></p>
+  </div>
+</div>
+</body>
+</html>
