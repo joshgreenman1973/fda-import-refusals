@@ -7,64 +7,68 @@
 <meta name="description" content="525,457 shipments the Food and Drug Administration turned away at the United States border since 2002, searchable by country, firm, product and the statutory charge — including filthy, putrid, or decomposed.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="house.css">
 <style>
-:root{--ink3:#9a7b2e}
-.chg{padding:13px 26px;border-bottom:1px solid var(--hair);cursor:pointer}
-.chg:hover{background:var(--paper2)}
+:root{--accent:var(--vermilion)}
+/* opening chart */
+#cv{width:100%;touch-action:pan-y}
+.readout b{color:var(--fg)}
+/* charge list */
+.chg{padding:13px clamp(16px,4vw,48px);border-bottom:1px solid var(--line2);cursor:pointer}
+.chg:hover{background:var(--bg2)}
 .chg .top{display:flex;justify-content:space-between;gap:14px;align-items:baseline}
-.chg .nm{font-family:var(--display);font-weight:700;font-size:1.02rem;letter-spacing:.04em;text-transform:uppercase}
-.chg .ct{font-family:var(--display);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
-.chg .sec{font-size:var(--t-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);
-  font-weight:700;margin-top:3px}
-.chg .txt{font-size:.94rem;line-height:1.5;margin-top:7px;color:#39403a}
+.chg .nm{font-family:var(--display);font-variation-settings:'wdth' 88;font-weight:700;font-size:var(--t-rec)}
+.chg .ct{font-family:var(--display);font-variation-settings:'wdth' 88;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chg .chs{font-size:var(--t-small);color:var(--fg2);margin-top:3px}
+.chg .txt{font-size:.94rem;line-height:1.5;margin-top:7px;color:var(--fg2)}
 .chg .txt.clip{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .spark{display:flex;align-items:flex-end;gap:1px;height:26px;margin-top:8px}
-.spark i{flex:1;background:var(--ink2c);opacity:.75;min-height:1px}
-.flag{display:inline-block;padding:1px 7px;background:var(--ink1);color:var(--paper);
-  font-size:var(--t-micro);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-left:8px}
-.ref{padding:11px 26px;border-bottom:1px solid var(--hair)}
-.ref b{font-family:var(--display);font-weight:600;font-size:1rem;display:block;line-height:1.25}
-.ref .meta{font-size:var(--t-micro);letter-spacing:.09em;text-transform:uppercase;font-weight:700;
-  color:var(--ink2);margin-top:3px}
+.spark i{flex:1;background:var(--accent);min-height:1px}
+.flag{display:inline-block;padding:0 7px;border:1px solid var(--sun);color:var(--sun);
+  font-family:var(--sans);font-size:var(--t-small);font-weight:600;margin-left:8px;vertical-align:2px}
+.ref{padding:11px clamp(16px,4vw,48px);border-bottom:1px solid var(--line2)}
+.ref b{font-family:var(--display);font-variation-settings:'wdth' 88;font-weight:600;font-size:1.05rem;display:block;line-height:1.25}
+.ref .meta{font-size:var(--t-small);color:var(--fg2);margin-top:3px}
 .ref .codes{margin-top:6px;display:flex;flex-wrap:wrap;gap:5px}
-.ref .codes span{font-size:var(--t-micro);font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  border:1px solid var(--hair);padding:1px 6px;color:var(--ink2)}
-.ref .codes span.k{border-color:var(--ink1);color:var(--ink1)}
+.ref .codes span{font-size:var(--t-micro);font-weight:600;border:1px solid var(--line);padding:1px 6px;color:var(--fg2)}
+.ref .codes span.k{border-color:var(--accent);color:var(--fg)}
 .pane{display:none}.pane.on{display:block}
-.loading{padding:34px 26px;color:var(--ink2)}
-.ctry{display:flex;align-items:center;gap:11px;padding:7px 26px;border-bottom:1px solid var(--hair2)}
+.loading{padding:34px clamp(16px,4vw,48px);color:var(--fg2)}
+.ctry{display:flex;align-items:center;gap:11px;padding:7px clamp(16px,4vw,48px);border-bottom:1px solid var(--line2)}
 .ctry span:first-child{width:170px;font-weight:600;font-size:.95rem;flex:none}
-.ctry i{height:13px;display:block;background:var(--ink2c);mix-blend-mode:multiply;opacity:.85}
+.ctry i{height:13px;display:block;background:var(--accent)}
 .ctry u{text-decoration:none;font-family:var(--display);font-weight:600;margin-left:auto;
   font-variant-numeric:tabular-nums;font-size:.92rem}
+@media(max-width:560px){.ctry span:first-child{width:120px}}
 </style>
 </head>
 <body>
 <div class="sheet">
 
   <div class="strip">
-    <span>U.S. Food and Drug Administration &middot; Office of Inspections and Investigations</span>
-    <span id="range">Import refusals</span>
+    <span>Food and Drug Administration import refusals</span>
+    <span id="range">January 2002 to August 2026</span>
   </div>
 
   <div class="head">
-    <!-- mark: a stack of import crates, one struck out and turned back -->
-    <div class="hmark" aria-hidden="true">
-      <img src="img/mark.png" alt="Abstract screenprint of stacked shipping crates, two of them struck through" width="640" height="357">
-    </div>
     <h1>Refused at the border</h1>
-    <p class="sub">Every shipment the Food and Drug Administration turned away from the United States
-      since 2002, with the statutory charge that stopped it. The single most common food charge is
-      number 249, which reads in part: the article "appears to consist in whole or in part of a filthy,
-      putrid, or decomposed substance." It has been used <b id="filthy">&mdash;</b> times.</p>
-    <p class="src">Source: <a href="https://datadashboard.fda.gov/oii/cd/imprefusals.htm" target="_blank" rel="noopener">FDA Data Dashboard import refusals API</a>
-      &middot; charge text from FDA's own crosswalk &middot; <a href="methodology.html">method</a></p>
+    <p class="finding">In 2025 the Food and Drug Administration refused 35,686 import lines at the United States border, the most in any year since 2011.</p>
+    <p class="lede">Every shipment line the agency turned away since January 2002, with the statutory charge
+      that stopped it: <b id="n-rec">525,457</b> refusals of goods from <b id="n-ctry">207</b> countries, under
+      <b id="n-chg">279</b> different charges. One row is one refused line on an entry, not one container.
+      The most common food charge, number 249, reads in part: the article "appears to consist in whole or
+      in part of a filthy, putrid, or decomposed substance." It has been cited <b id="filthy">39,779</b> times.</p>
+    <p class="src">Source: <a href="https://datadashboard.fda.gov/oii/cd/imprefusals.htm" target="_blank" rel="noopener">Food and Drug Administration Data Dashboard import refusals</a>
+      &middot; charge text from the agency's own crosswalk &middot; <a href="methodology.html">Method</a></p>
   </div>
 
-  <div class="capline" id="capline"></div>
-  <div class="counts" id="counts"></div>
+  <div class="fig">
+    <div class="figcap"><span><b>Each column is one month's refused import lines.</b></span>
+      <span><span class="key"><i style="background:var(--accent)"></i>Refused lines</span><span class="key"><i style="background:var(--sun)"></i>Month runs past the top of the scale</span></span></div>
+    <canvas id="cv" role="img" aria-label="Refused import lines per month, January 2002 to August 2026"></canvas>
+    <div class="readout" id="ro" data-def="Three months in 2011 run past the top of the scale: most of that year's 83,584 refusals cite one charge, a drug or device missing from the listing the law requires. August 2026 is a partial month."></div>
+  </div>
 
   <div class="tabs" id="tabs">
     <button class="on" data-p="charges">The charges</button>
@@ -137,15 +141,11 @@ Promise.all([
 function init(){
   const filthy = CHARGES.find(c=>c.code==='FILTHY');
   $('#filthy').textContent = filthy?nf(filthy.n):'—';
-  $('#range').textContent = META.date_min.replace('-','/')+' – '+META.date_max.replace('-','/');
-  $('#capline').innerHTML='Shipments refused at the United States border between <b>'+META.date_min.replace('-','/')+'</b> and <b>'+META.date_max.replace('-','/')+'</b> &middot; one row is one refused entry line, not one container';
-  $('#counts').innerHTML=[
-    [nf(META.records),'Refusals'],
-    [nf(META.countries),'Countries'],
-    [nf(META.charge_codes_used),'Charges used'],
-    [META.years.length,'Years'],
-    [filthy?nf(filthy.n):'—','Filthy'],
-  ].map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join('');
+  $('#n-rec').textContent=nf(META.records);
+  $('#n-ctry').textContent=nf(META.countries);
+  $('#n-chg').textContent=nf(META.charge_codes_used);
+  drawMonths();
+  let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(drawMonths,150)});
 
   document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>{
     document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));
@@ -158,6 +158,47 @@ function init(){
   $('#q-ctry').addEventListener('input',renderCountries);
   $('#q-firm').addEventListener('input',renderFirms);
   renderCharges(); renderCountries(); renderFirms();
+}
+
+
+/* ---------- opening chart: refused lines per month ---------- */
+const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function tok(el){const st=getComputedStyle(el),g=n=>st.getPropertyValue('--'+n).trim();
+  return {bg:g('bg'),fg:g('fg'),fg2:g('fg2'),grid:g('grid'),accent:g('vermilion'),sun:g('sun')}}
+function drawMonths(){
+  const cv=$('#cv'),ro=$('#ro'),T=tok(cv);
+  const ks=Object.keys(AGG.ym).sort(),vals=ks.map(k=>AGG.ym[k]);
+  const r=cv.getBoundingClientRect(),narrow=r.width<560,H=narrow?240:320;
+  const dpr=Math.min(2,window.devicePixelRatio||1);
+  cv.width=Math.round(r.width*dpr);cv.height=Math.round(H*dpr);cv.style.height=H+'px';
+  const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+  const w=r.width,h=H,L=narrow?40:50,R=8,Tp=22,B=24,pw=w-L-R,ph=h-Tp-B,CAP=6000;
+  const bw=pw/vals.length,xs=i=>L+i*bw,ys=v=>Tp+ph-Math.min(v,CAP)/CAP*ph;
+  const yearOf=i=>ks[i].slice(0,4);
+  function base(hy){
+    ctx.clearRect(0,0,w,h);ctx.fillStyle=T.bg;ctx.fillRect(0,0,w,h);
+    ctx.font=(narrow?'11px':'12.5px')+' Karla, sans-serif';ctx.textBaseline='middle';ctx.textAlign='right';
+    [0,2000,4000,6000].forEach(v=>{const y=ys(v);ctx.strokeStyle=T.grid;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(L,Math.round(y)+.5);ctx.lineTo(w-R,Math.round(y)+.5);ctx.stroke();
+      ctx.fillStyle=T.fg2;ctx.fillText(nf(v),L-6,y)});
+    ctx.textAlign='center';ctx.textBaseline='alphabetic';
+    ks.forEach((k,i)=>{if(k.endsWith('-01')){const y=+k.slice(0,4);if(y%(narrow?10:5)===0)ctx.fillText(y,xs(i)+bw*6,h-6)}});
+    vals.forEach((v,i)=>{const over=v>CAP;ctx.fillStyle=over?T.sun:T.accent;
+      ctx.globalAlpha=hy&&yearOf(i)!==hy?.45:1;
+      const x=xs(i),y=ys(v);ctx.fillRect(x+(bw>3?.5:0),y,Math.max(1,bw-(bw>3?1:0)),Tp+ph-y)});
+    ctx.globalAlpha=1;
+    // label months that run past the cap
+    ctx.fillStyle=T.fg;ctx.font='600 '+(narrow?'11px':'12.5px')+' Karla, sans-serif';ctx.textBaseline='alphabetic';
+    const over=vals.map((v,i)=>[v,i]).filter(([v])=>v>CAP);
+    if(over.length){const [v,i]=over.reduce((a,b)=>b[0]>a[0]?b:a);ctx.textAlign='left';
+      ctx.fillText('August 2011: '+nf(v),xs(i)+bw+4,Tp-6)}
+  }
+  base();const def=ro.dataset.def;ro.innerHTML=def;
+  cv.onpointermove=ev=>{const b=cv.getBoundingClientRect(),mx=ev.clientX-b.left;
+    const i=Math.floor((mx-L)/bw);if(i<0||i>=vals.length){base();ro.innerHTML=def;return}
+    const y=yearOf(i);base(y);ctx.strokeStyle=T.fg;ctx.lineWidth=1;ctx.strokeRect(xs(i)+.5,Tp+.5,Math.max(2,bw)-1,ph-1);
+    const m=MON[+ks[i].slice(5)-1];const part=ks[i]===META.date_max?' (partial month)':'';
+    ro.innerHTML=`${m} ${y}${part}: <b>${nf(vals[i])}</b> refused lines. All of ${y}: <b>${nf(AGG.year[y]||0)}</b>.`};
+  cv.onpointerleave=()=>{base();ro.innerHTML=def};
 }
 
 /* ---------- charges ---------- */
@@ -175,7 +216,7 @@ function renderCharges(){
     return `<div class="chg">
       <div class="top"><span class="nm">${esc(c.code||('Code '+c.id))}${c.text?'':'<span class="flag">No published text</span>'}</span>
         <span class="ct">${nf(c.n)}</span></div>
-      <div class="sec">${esc(c.section||'Section not published')} &middot; code ${esc(c.id)}</div>
+      <div class="chs">${esc(c.section||'Section not published')} &middot; code ${esc(c.id)}</div>
       ${c.text?`<div class="txt clip" onclick="this.classList.toggle('clip')">${esc(c.text)}</div>`:''}
       <div class="spark">${spark}</div></div>`;
   }).join('') : '<div class="empty">No charge matches that.</div>';

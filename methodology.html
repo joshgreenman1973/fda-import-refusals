@@ -6,18 +6,18 @@
 <title>How this was built — Refused at the border</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="house.css">
 <style>
-:root{--ink3:#9a7b2e}
-.doc{max-width:780px;padding:0 26px 70px}
-.doc h2{font-family:var(--display);font-size:1.1rem;font-weight:700;letter-spacing:-.01em;
-  margin:30px 0 9px;padding-bottom:6px;border-bottom:1px solid var(--hair)}
+:root{--accent:var(--vermilion)}
+.doc{max-width:780px;padding:0 clamp(16px,4vw,48px) 70px}
+.doc h2{font-size:1.3rem;margin:32px 0 9px}
 .doc p{margin:0 0 13px;line-height:1.62}
 .doc ul{margin:0 0 13px;padding-left:20px}.doc li{margin-bottom:7px;line-height:1.55}
-code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--paper2);padding:1px 5px}
-.back{font-size:var(--t-small);letter-spacing:.13em;text-transform:uppercase;font-weight:700;
-  color:var(--ink2);text-decoration:none}
+.doc strong{color:var(--fg)}
+code{font-family:var(--sans);font-weight:600;font-size:.92em;background:var(--bg2);padding:1px 5px;overflow-wrap:anywhere}
+.back{font-size:var(--t-small);color:var(--fg2);text-decoration:none}
+.back:hover{color:var(--fg)}
 </style>
 </head>
 <body>
@@ -25,7 +25,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--p
   <div class="strip"><a class="back" href="index.html">&larr; Back to the database</a><span>Method</span></div>
   <div class="head">
     <h1>How this was built</h1>
-    <p class="sub">Sources, the exact query, what counts as a refusal and the four things this
+    <p class="lede">Sources, the exact query, what counts as a refusal and the four things this
       database cannot tell you.</p>
   </div>
   <div class="doc">
